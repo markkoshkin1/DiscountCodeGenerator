@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscountCodeGenerator.Db", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscountCodeGenerator.Models", "DiscountCodeGenerator.Models\DiscountCodeGenerator.Models.csproj", "{DACEBD1E-7DC6-43D0-80F2-C3ABD552A184}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscountCodeGenerator.Services", "DiscountCodeGenerator.Services\DiscountCodeGenerator.Services.csproj", "{DA5EB08B-3D02-4137-9BB1-8CCC04861C96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{DACEBD1E-7DC6-43D0-80F2-C3ABD552A184}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DACEBD1E-7DC6-43D0-80F2-C3ABD552A184}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DACEBD1E-7DC6-43D0-80F2-C3ABD552A184}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA5EB08B-3D02-4137-9BB1-8CCC04861C96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA5EB08B-3D02-4137-9BB1-8CCC04861C96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA5EB08B-3D02-4137-9BB1-8CCC04861C96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA5EB08B-3D02-4137-9BB1-8CCC04861C96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +43,7 @@ Global
 		{B9E14D23-44E2-4DC6-B014-D5035E545797} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{4A7225D6-A4E9-46D8-9E48-03F7A933563B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{DACEBD1E-7DC6-43D0-80F2-C3ABD552A184} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{DA5EB08B-3D02-4137-9BB1-8CCC04861C96} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {356352B2-55D4-463B-A336-9DA9DD4F4BB2}
