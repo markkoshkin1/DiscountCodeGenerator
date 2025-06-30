@@ -21,6 +21,15 @@ namespace DiscountCodeGenerator.API
 
             // Add services to the container.   
             builder.Services.AddGrpc();
+            builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
+            }));
+
+
             builder.Services.AddDbContextPool<DiscountCodeContext>(options =>
                              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -39,7 +48,7 @@ namespace DiscountCodeGenerator.API
             // Configure the HTTP request pipeline.
             app.UseGrpcWeb();
             app.MapGrpcService<GreeterService>();
-            app.MapGrpcService<DiscountService>().EnableGrpcWeb();
+            app.MapGrpcService<DiscountService>().EnableGrpcWeb().RequireCors("AllowAll"); ;
             app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
             try
