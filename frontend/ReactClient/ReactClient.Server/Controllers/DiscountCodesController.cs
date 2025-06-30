@@ -12,19 +12,24 @@ namespace ReactClient.Server.Controllers
         //private readonly Discount.DiscountClient client;
 
         //private readonly DiscountCodeGenerator.DiscountCodeGeneratorClient _grpcClient;
+        private readonly Discount.DiscountClient _grpcClient;
 
-        public DiscountCodesController()
+        public DiscountCodesController(Discount.DiscountClient grpcClient)
         {
-
-            // _grpcClient = grpcClient;
+            _grpcClient = grpcClient;
         }
 
         [HttpGet("generate")]
         public async Task<IActionResult> Generate(int length, int amount)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:7034");
-            var client = new Discount.DiscountClient(channel);
-            var result = await client.UseCodeAsync(new UseCodeRequest { Code = "1234567" });
+            //using var channel = GrpcChannel.ForAddress("https://localhost:7034");
+            //var client = new Discount.DiscountClient(channel);
+            //var result = await client.UseCodeAsync(new UseCodeRequest { Code = "1234567" });
+
+            var request = new UseCodeRequest { Code = "1234567" };
+
+            var response = await _grpcClient.UseCodeAsync(request);
+
             //var request = new GenerateCodesRequest { Length = length, Amount = amount };
             //var response = await _grpcClient.GenerateCodesAsync(request);
             return Ok();
