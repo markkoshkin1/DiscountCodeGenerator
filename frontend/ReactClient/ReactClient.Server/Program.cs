@@ -13,10 +13,7 @@ namespace ReactClient.Server
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
-            //builder.Services.AddGrpcClient<DiscountCodeGenerator.DiscountCodeGeneratorClient>(o =>
-            //{
-            //    o.Address = new Uri("https://localhost:5001");  // your gRPC backend address
-            //});
+            
 
             var app = builder.Build();
 

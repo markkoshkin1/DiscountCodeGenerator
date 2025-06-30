@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Grpc.Net.Client;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DiscountCodeGeneratorClient;
 
 namespace ReactClient.Server.Controllers
 {
@@ -7,20 +9,26 @@ namespace ReactClient.Server.Controllers
     [ApiController]
     public class DiscountCodesController : ControllerBase
     {
+        //private readonly Discount.DiscountClient client;
+
         //private readonly DiscountCodeGenerator.DiscountCodeGeneratorClient _grpcClient;
 
         public DiscountCodesController()
         {
-           // _grpcClient = grpcClient;
+
+            // _grpcClient = grpcClient;
         }
 
         [HttpGet("generate")]
         public async Task<IActionResult> Generate(int length, int amount)
         {
+            using var channel = GrpcChannel.ForAddress("https://localhost:7034");
+            var client = new Discount.DiscountClient(channel);
+            var result = await client.UseCodeAsync(new UseCodeRequest { Code = "1234567" });
             //var request = new GenerateCodesRequest { Length = length, Amount = amount };
             //var response = await _grpcClient.GenerateCodesAsync(request);
-            //return Ok(response.Codes);
-            throw new NotImplementedException("gRPC client is not implemented yet.");
+            return Ok();
+            //throw new NotImplementedException("gRPC client is not implemented yet.");
         }
 
         //[HttpPost("use")]
