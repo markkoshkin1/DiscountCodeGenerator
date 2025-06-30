@@ -23,7 +23,7 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
             _codeGenerator = codeGenerator;
         }
 
-        public async Task<List<string>> GenerateCodesAsync(int count, int length)
+        public async Task<List<string>> GenerateCodesAsync(uint count, uint length)
         {
             if (count <= 0 || length <= 0 || count > 2000)
                 throw new ArgumentException("Invalid count or length");
@@ -78,12 +78,18 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
 
         public async Task<bool> UseCodeAsync(string code)
         {
+            //add transaction
             var discountCode = await _db.DiscountCodes.FirstOrDefaultAsync(c => c.Code == code);
             if (discountCode == null)
                 return false;
 
+            if (discountCode.IsUsed)
+                return false;
+
             discountCode.UpdatedAt = DateTime.UtcNow;
+            discountCode.IsUsed = true;
             await _db.SaveChangesAsync();
+
             return true;
         }
     }

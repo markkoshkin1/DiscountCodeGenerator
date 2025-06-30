@@ -16,12 +16,12 @@ namespace ReactClient.Server.Controllers
 
         // GET api/discountcodes/generate?length=7&count=10
         [HttpGet("generate")]
-        public async Task<IActionResult> Generate(int length, int count)
+        public async Task<IActionResult> Generate(int length, int amount)
         {
             var request = new GenerateRequest
             {
                 Length = (uint)length,
-                Count = (uint)count
+                Count = (uint)amount
             };
 
             var response = await _grpcClient.GenerateCodesAsync(request);
@@ -42,7 +42,7 @@ namespace ReactClient.Server.Controllers
             var grpcResponse = await _grpcClient.UseCodeAsync(req);
 
             // Assuming result == 0 means success, others failure
-            bool success = grpcResponse.Result == 0;
+            bool success = grpcResponse.Result == 1;
 
             return Ok(new
             {

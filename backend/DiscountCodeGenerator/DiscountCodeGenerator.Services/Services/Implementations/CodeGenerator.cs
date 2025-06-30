@@ -23,7 +23,7 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
             _memoryCache = memoryCache;
         }
 
-        public string GenerateUniqueCode(int length)
+        public string GenerateUniqueCode(uint length)
         {
             string code;
             do
@@ -35,7 +35,7 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
             return code;
         }
 
-        private string Generate(int length)
+        private string Generate(uint length)
         {
             if (length <= 0)
                 throw new ArgumentException("Length must be positive", nameof(length));

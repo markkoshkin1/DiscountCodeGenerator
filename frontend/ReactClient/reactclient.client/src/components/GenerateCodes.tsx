@@ -9,7 +9,6 @@ import {
   FormControlLabel,
   Radio,
   FormLabel,
-  FormHelperText,
 } from '@mui/material';
 
 export default function GenerateCodes() {
@@ -17,23 +16,40 @@ export default function GenerateCodes() {
   const [amount, setAmount] = useState<number>(1);
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setError('');
+    setGeneratedCodes([]);
+
     if (amount < 1 || amount > 2000) {
       setError('Amount must be between 1 and 2000');
       return;
     }
 
-    const codes = Array(amount)
-      .fill(null)
-      .map(() =>
-        Math.random()
-          .toString(36)
-          .substring(2, 2 + parseInt(length))
-          .toUpperCase()
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://localhost:7017/api/discountcodes/generate?length=${length}&amount=${amount}`
       );
-    setGeneratedCodes(codes);
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText || 'Failed to generate codes');
+      }
+
+      const data = await response.json();
+
+      if (data) {
+        setGeneratedCodes(data);
+      } else {
+        setError('Invalid response from server');
+      }
+    } catch (ex: any) {
+      setError(ex.message || 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,8 +81,14 @@ export default function GenerateCodes() {
         helperText={error}
       />
 
-      <Button variant="contained" fullWidth onClick={handleGenerate} sx={{ mt: 2 }}>
-        Generate
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={handleGenerate}
+        sx={{ mt: 2 }}
+        disabled={loading}
+      >
+        {loading ? 'Generating...' : 'Generate'}
       </Button>
 
       <TextField

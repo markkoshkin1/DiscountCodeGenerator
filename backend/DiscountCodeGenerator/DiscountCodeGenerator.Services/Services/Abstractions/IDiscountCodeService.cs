@@ -8,7 +8,7 @@ namespace DiscountCodeGenerator.Services.Services.Abstractions
 {
     public interface IDiscountCodeService
     {
-        Task<List<string>> GenerateCodesAsync(int count, int length);
+        Task<List<string>> GenerateCodesAsync(uint count, uint length);
         Task<bool> UseCodeAsync(string code);
     }
 }

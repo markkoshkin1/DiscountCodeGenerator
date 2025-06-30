@@ -8,6 +8,6 @@ namespace DiscountCodeGenerator.Services.Services.Abstractions
 {
     public interface ICodeGenerator
     {
-        string GenerateUniqueCode(int length);
+        string GenerateUniqueCode(uint length);
     }
 }
