@@ -1,5 +1,7 @@
 using DiscountCodeGenerator.API.Services;
 using DiscountCodeGenerator.Db;
+using DiscountCodeGenerator.Services.Services.Abstractions;
+using DiscountCodeGenerator.Services.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -21,6 +23,10 @@ namespace DiscountCodeGenerator.API
             builder.Services.AddGrpc();
             builder.Services.AddDbContextPool<DiscountCodeContext>(options =>
                              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSingleton<ICodeGenerator, CodeGenerator>();
+            builder.Services.AddScoped<IDiscountCodeService, DiscountCodeService>();
 
             var app = builder.Build();
 

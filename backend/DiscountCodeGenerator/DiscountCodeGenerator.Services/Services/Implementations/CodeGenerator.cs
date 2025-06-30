@@ -1,4 +1,6 @@
 ﻿using DiscountCodeGenerator.Services.Services.Abstractions;
+using Microsoft.Extensions.Caching.Memory;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +10,32 @@ using System.Threading.Tasks;
 
 namespace DiscountCodeGenerator.Services.Services.Implementations
 {
+
+    //TODO: Replace memory cache with distrubuted cache if you want to use more than one instance of the service
     public class CodeGenerator : ICodeGenerator
     {
         private static readonly char[] _chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".ToCharArray();
         private readonly int _charSetLength = _chars.Length;
+        private readonly IMemoryCache _memoryCache;
 
-        public string Generate(int length)
+        public CodeGenerator(IMemoryCache memoryCache)
+        {
+            _memoryCache = memoryCache;
+        }
+
+        public string GenerateUniqueCode(int length)
+        {
+            string code;
+            do
+            {
+                code = Generate(length);
+            } while (CodeExists(code));
+
+            CacheCode(code);
+            return code;
+        }
+
+        private string Generate(int length)
         {
             if (length <= 0)
                 throw new ArgumentException("Length must be positive", nameof(length));
@@ -29,6 +51,22 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
             }
 
             return new string(result);
+        }
+
+        private bool CodeExists(string code)
+        {
+            var isExist = _memoryCache.TryGetValue(code, out _);
+            if (isExist)
+            {
+                Log.Warning("Code {Code} already exists in cache", code);
+            }   
+
+            return isExist;
+        }
+
+        private void CacheCode(string code)
+        {
+            _memoryCache.Set(code, true, TimeSpan.FromMinutes(5));
         }
     }
 }

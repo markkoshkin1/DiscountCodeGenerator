@@ -32,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DiscountCodeGenerator.Db\DiscountCodeGenerator.Db.csproj" />
     <ProjectReference Include="..\DiscountCodeGenerator.Models\DiscountCodeGenerator.Models.csproj" />
+    <ProjectReference Include="..\DiscountCodeGenerator.Services\DiscountCodeGenerator.Services.csproj" />
   </ItemGroup>
 
 </Project>

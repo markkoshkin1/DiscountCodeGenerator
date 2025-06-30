@@ -30,7 +30,6 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
             try
             {
                 var finalCodes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                var allGenerated = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
                 while (finalCodes.Count < count)
                 {
@@ -39,11 +38,8 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
 
                     while (generatedSet.Count < remaining)
                     {
-                        var code = _codeGenerator.Generate(length);
-                        if (allGenerated.Add(code))
-                        {
-                            generatedSet.Add(code);
-                        }
+                        var code = _codeGenerator.GenerateUniqueCode(length);
+                        generatedSet.Add(code);
                     }
 
                     var generatedList = generatedSet.ToList();
