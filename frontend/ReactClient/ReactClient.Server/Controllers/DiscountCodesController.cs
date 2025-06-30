@@ -1,17 +1,12 @@
-﻿using Grpc.Net.Client;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using DiscountCodeGeneratorClient;
+﻿using Microsoft.AspNetCore.Mvc;
+using DiscountCodeGeneratorClient; // The generated C# namespace from your proto
 
 namespace ReactClient.Server.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class DiscountCodesController : ControllerBase
     {
-        //private readonly Discount.DiscountClient client;
-
-        //private readonly DiscountCodeGenerator.DiscountCodeGeneratorClient _grpcClient;
         private readonly Discount.DiscountClient _grpcClient;
 
         public DiscountCodesController(Discount.DiscountClient grpcClient)
@@ -19,30 +14,41 @@ namespace ReactClient.Server.Controllers
             _grpcClient = grpcClient;
         }
 
+        // GET api/discountcodes/generate?length=7&count=10
         [HttpGet("generate")]
-        public async Task<IActionResult> Generate(int length, int amount)
+        public async Task<IActionResult> Generate(int length, int count)
         {
-            //using var channel = GrpcChannel.ForAddress("https://localhost:7034");
-            //var client = new Discount.DiscountClient(channel);
-            //var result = await client.UseCodeAsync(new UseCodeRequest { Code = "1234567" });
+            var request = new GenerateRequest
+            {
+                Length = (uint)length,
+                Count = (uint)count
+            };
 
-            var request = new UseCodeRequest { Code = "1234567" };
+            var response = await _grpcClient.GenerateCodesAsync(request);
 
-            var response = await _grpcClient.UseCodeAsync(request);
+            if (!response.Result)
+                return BadRequest("Failed to generate codes");
 
-            //var request = new GenerateCodesRequest { Length = length, Amount = amount };
-            //var response = await _grpcClient.GenerateCodesAsync(request);
-            return Ok();
-            //throw new NotImplementedException("gRPC client is not implemented yet.");
+            return Ok(response.Codes);
         }
 
-        //[HttpPost("use")]
-        //public async Task<IActionResult> Use([FromBody] UseCodeRequest req)
-        //{
-        //    throw new NotImplementedException("gRPC client is not implemented yet.");
-        //    //var grpcReq = new UseCodeGrpcRequest { Code = req.Code };
-        //    //var grpcResp = await _grpcClient.UseCodeAsync(grpcReq);
-        //    //return Ok(new { grpcResp.Status, grpcResp.Message });
-        //}
+        // POST api/discountcodes/use
+        [HttpPost("use")]
+        public async Task<IActionResult> Use([FromBody] UseCodeRequest req)
+        {
+            if (string.IsNullOrWhiteSpace(req.Code))
+                return BadRequest("Code is required");
+
+            var grpcResponse = await _grpcClient.UseCodeAsync(req);
+
+            // Assuming result == 0 means success, others failure
+            bool success = grpcResponse.Result == 0;
+
+            return Ok(new
+            {
+                Success = success,
+                ResultCode = grpcResponse.Result
+            });
+        }
     }
 }

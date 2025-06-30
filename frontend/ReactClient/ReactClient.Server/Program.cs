@@ -8,6 +8,16 @@ namespace ReactClient.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactDevServer", policy =>
+                {
+                    policy.WithOrigins("https://localhost:64024")  // React app URL
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             // Add services to the container.
 
             builder.Services.AddGrpcClient<Discount.DiscountClient>(o =>
@@ -26,10 +36,12 @@ namespace ReactClient.Server
             app.UseDefaultFiles();
             app.MapStaticAssets();
 
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.UseCors("AllowReactDevServer");
             }
 
             app.UseHttpsRedirection();
