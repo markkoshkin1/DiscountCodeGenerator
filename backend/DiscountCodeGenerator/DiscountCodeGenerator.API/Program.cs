@@ -19,7 +19,7 @@ namespace DiscountCodeGenerator.API
 
             // Add services to the container.   
             builder.Services.AddGrpc();
-            builder.Services.AddDbContext<DiscountCodeContext>(options =>
+            builder.Services.AddDbContextPool<DiscountCodeContext>(options =>
                              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
