@@ -19,7 +19,7 @@ namespace DiscountCodeGenerator.Models
         /// <summary>
         /// Date and time when the code was generated.
         /// </summary>
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Date and time when the code was last updated.

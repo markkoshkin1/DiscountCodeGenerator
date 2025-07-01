@@ -1,11 +1,5 @@
 ﻿using DiscountCodeGenerator.Db;
 using DiscountCodeGenerator.Services.Services.Abstractions;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Serilog;
 using DiscountCodeGenerator.Models;
 using Microsoft.EntityFrameworkCore;
@@ -29,12 +23,12 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
                 throw new ArgumentException("Invalid count or length");
             try
             {
-                var finalCodes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var finalCodes = new HashSet<string>(StringComparer.Ordinal);
 
                 while (finalCodes.Count < count)
                 {
                     var remaining = count - finalCodes.Count;
-                    var generatedSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    var generatedSet = new HashSet<string>(StringComparer.Ordinal);
 
                     while (generatedSet.Count < remaining)
                     {
@@ -42,15 +36,13 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
                         generatedSet.Add(code);
                     }
 
-                    var generatedList = generatedSet.ToList();
-
                     var existingCodes = await _db.DiscountCodes
                         .AsNoTracking()
-                        .Where(c => generatedList.Contains(c.Code))
+                        .Where(c => generatedSet.Contains(c.Code))
                         .Select(c => c.Code)
                         .ToListAsync();
 
-                    var uniqueCodes = generatedList.Except(existingCodes, StringComparer.OrdinalIgnoreCase);
+                    var uniqueCodes = generatedSet.Except(existingCodes, StringComparer.Ordinal);
 
                     foreach (var code in uniqueCodes)
                     {
@@ -64,14 +56,14 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
                     CreatedAt = DateTime.UtcNow
                 }).ToList();
 
-                _db.DiscountCodes.AddRange(entities);
+                await _db.DiscountCodes.AddRangeAsync(entities);
                 await _db.SaveChangesAsync();
 
                 return finalCodes.ToList();
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, "Error generating discount codes");
+                Log.Error(ex, "Error generating discount codes");
                 throw;
             }
         }
