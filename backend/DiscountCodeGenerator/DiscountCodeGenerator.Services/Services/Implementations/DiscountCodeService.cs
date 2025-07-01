@@ -78,19 +78,33 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
 
         public async Task<bool> UseCodeAsync(string code)
         {
-            //add transaction
-            var discountCode = await _db.DiscountCodes.FirstOrDefaultAsync(c => c.Code == code);
-            if (discountCode == null)
+            try
+            {
+                var discountCode = await _db.DiscountCodes.FirstOrDefaultAsync(c => c.Code == code);
+                if (discountCode == null)
+                {
+                    Log.Warning($"Code {code} doesn't exist");
+                    return false;
+                }
+
+                if (discountCode.IsUsed)
+                {
+                    Log.Warning($"Code {code} was already used");
+                    return false;
+                }
+
+                discountCode.UpdatedAt = DateTime.UtcNow;
+                discountCode.IsUsed = true;
+                await _db.SaveChangesAsync();
+
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                Log.Error($"While using code concurrency execption occured for {code}");
+
                 return false;
-
-            if (discountCode.IsUsed)
-                return false;
-
-            discountCode.UpdatedAt = DateTime.UtcNow;
-            discountCode.IsUsed = true;
-            await _db.SaveChangesAsync();
-
-            return true;
+            }
         }
     }
 

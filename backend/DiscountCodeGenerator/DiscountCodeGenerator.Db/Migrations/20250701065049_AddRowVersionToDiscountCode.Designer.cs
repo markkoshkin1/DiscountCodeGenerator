@@ -4,6 +4,7 @@ using DiscountCodeGenerator.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiscountCodeGenerator.Db.Migrations
 {
     [DbContext(typeof(DiscountCodeContext))]
-    partial class DiscountCodeContextModelSnapshot : ModelSnapshot
+    [Migration("20250701065049_AddRowVersionToDiscountCode")]
+    partial class AddRowVersionToDiscountCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
