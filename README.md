@@ -61,8 +61,12 @@ Make sure you have the following software installed on your machine:
     ```
 
 2.  **Set up the Service**
-    *(Assuming a backend located in a `backend\DiscountCodeGenerator` directory.)*
-    # You may need to set up database connection strings in `appsettings.Development.json`
+    *(Backend located in a `backend\DiscountCodeGenerator` directory.)*
+
+	```sh
+    You may need to setup database connection strings in `appsettings.Development.json`
+	Change logs folder destination
+    ```
 
 3.  **Set up the Frontend**
     ```sh
