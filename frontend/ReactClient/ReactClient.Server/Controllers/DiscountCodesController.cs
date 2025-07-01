@@ -41,12 +41,9 @@ namespace ReactClient.Server.Controllers
 
             var grpcResponse = await _grpcClient.UseCodeAsync(req);
 
-            // Assuming result == 0 means success, others failure
-            bool success = grpcResponse.Result == 1;
-
             return Ok(new
             {
-                Success = success,
+                Success = grpcResponse.Result == (uint)Grpc.Core.StatusCode.OK,
                 ResultCode = grpcResponse.Result
             });
         }
