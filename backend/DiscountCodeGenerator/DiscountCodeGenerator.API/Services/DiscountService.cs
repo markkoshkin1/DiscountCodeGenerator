@@ -49,6 +49,7 @@ namespace DiscountCodeGenerator.API.Services
                     response.Result = (uint)StatusCode.NotFound;
                     break;
                 case DiscountCodeGenerator.Services.Models.DiscountStatusCodes.CodeAlreadyUsed:
+                case DiscountCodeGenerator.Services.Models.DiscountStatusCodes.InvalidCodeFormat:
                     response.Result = (uint)StatusCode.InvalidArgument;
                     break;
                 default:

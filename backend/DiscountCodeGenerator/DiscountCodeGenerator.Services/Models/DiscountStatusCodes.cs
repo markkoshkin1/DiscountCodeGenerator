@@ -13,5 +13,6 @@ namespace DiscountCodeGenerator.Services.Models
         CodeNotFound = 3,
         CodeAlreadyUsed = 4,
         ServerError = 5,
+        InvalidCodeFormat = 6,
     }
 }

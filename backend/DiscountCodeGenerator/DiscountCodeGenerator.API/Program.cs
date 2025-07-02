@@ -1,3 +1,4 @@
+using DiscountCodeGenerator.API.Interceptors;
 using DiscountCodeGenerator.API.Services;
 using DiscountCodeGenerator.Db;
 using DiscountCodeGenerator.Services.Services.Abstractions;
@@ -20,7 +21,10 @@ namespace DiscountCodeGenerator.API
             builder.Host.UseSerilog();
 
             // Add services to the container.   
-            builder.Services.AddGrpc();
+            builder.Services.AddGrpc(options =>
+            {
+                options.Interceptors.Add<TimingInterceptor>();
+            });
 
             builder.Services.AddDbContextPool<DiscountCodeContext>(options =>
                              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

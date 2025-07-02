@@ -21,7 +21,7 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
 
         public async Task<Result<List<string>, DiscountStatusCodes>> GenerateCodesAsync(uint count, uint length)
         {
-            if (count <= 0 || length <= 0 || count > 2000)
+            if (count <= 0 || length <= 0 || count > 2000 || length < 7 || length > 8)
             {
                 Log.Warning("Invalid request to generate codes: count={Count}, length={Length}", count, length);
                 return new Result<List<string>, DiscountStatusCodes>(
@@ -96,6 +96,18 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(code) || code.Length < 7 || code.Length > 8)
+                {
+                    Log.Warning($"Invalid code format: {code}");
+                    return new Result<bool, DiscountStatusCodes>
+                    (
+                        false,
+                        false,
+                        DiscountStatusCodes.InvalidCodeFormat,
+                        ErrorMessages.InvalidCodeFormat
+                    );
+                }
+
                 var discountCode = await _db.DiscountCodes.FirstOrDefaultAsync(c => c.Code == code);
                 if (discountCode == null)
                 {
