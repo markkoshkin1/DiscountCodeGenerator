@@ -52,6 +52,11 @@ namespace DiscountCodeGenerator.Services.Services.Implementations
                         .Select(c => c.Code)
                         .ToListAsync();
 
+                    if (existingCodes.Any() == true)
+                    {
+                        Log.Warning($"Collision with db detected for {existingCodes.Count()} codes");
+                    }
+
                     var uniqueCodes = generatedSet.Except(existingCodes, StringComparer.Ordinal);
 
                     foreach (var code in uniqueCodes)
